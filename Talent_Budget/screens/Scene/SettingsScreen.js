@@ -15,8 +15,8 @@ import {
   Alert,
   RefreshControl,
   ActivityIndicator,
-  } 
-  from 'react-native';
+  LogBox
+}from 'react-native';
 import { useEffect } from 'react';
 Room_color = function(mycolor) {
   return {
@@ -30,32 +30,32 @@ Room_color = function(mycolor) {
   }
 }
 function Room_auto(room_name){
-  if((room_name)=='믿음'){
+  if((room_name)=='Green'){
     return Room_color('#d2f1db')
   }
-  else if((room_name)=='해마루'){
+  else if((room_name)=='Orange'){
     return Room_color('#f1f0e7')
   }
-  else if((room_name)=='가이오'){
+  else if((room_name)=='Blue'){
     return Room_color('#d0e8fe')
   }
-  else if((room_name)=='레드'){
+  else if((room_name)=='Red'){
     return Room_color('#eddfde')
   }
   else
   return Room_color('#deeced')
 }
 function accordion(room_name){
-  if((room_name)=='믿음'){
+  if((room_name)=='Green'){
     return Room_color('#a8c0af')
   }
-  else if((room_name)=='해마루'){
+  else if((room_name)=='Orange'){
     return Room_color('#c0c0b8')
   }
-  else if((room_name)=='가이오'){
+  else if((room_name)=='Blue'){
     return Room_color('#a6b9cb')
   }
-  else if((room_name)=='레드'){
+  else if((room_name)=='Red'){
     return Room_color('#bdb2b1')
   }
   else
@@ -87,7 +87,7 @@ function accordion(room_name){
       </CollapseHeader>
       <CollapseBody>
       <View style={accordion(room_name)}>
-      <Text style={styles.title}>달란트:</Text>
+      <Text style={styles.title}>Talent:</Text>
         <Text style={styles.title}>{'\u0024'}</Text>
       </View>
     </CollapseBody>
@@ -96,7 +96,7 @@ function accordion(room_name){
       )};
     const swipeoutBtns_delete =(item,id,room_name)=>[
       {
-        text: '삭제',
+        text: 'Delete',
         type:'delete',
         backgroundColor:'red',
         autoColse:true,
@@ -107,16 +107,16 @@ function accordion(room_name){
             ),
         onPress:()=>{
           Alert.alert(
-            '삭제하시겠습니까?',
+            'Do you want to delete?',
             item,
             [
               {
-                text: "취소",
-                onPress : () => console.log("입력취소"),
+                text: "Cancel",
+                onPress : () => console.log("It is canceled"),
                 style: "cancel"
               },
               {
-                text: "확인",
+                text: "Confirm",
                 onPress: () => {axios.delete('http://127.0.0.1:8000/child/delete-child/',
                 {
                  headers:{
@@ -130,11 +130,11 @@ function accordion(room_name){
                   console.log(response.status);
                   if(response.status==200)// return setTimeout(() => {
                     return Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용
-                      (item)+"가(이) 삭제되었습니다.",
-                      (room_name)+"반",
+                      (item)+" is deleted",
+                      (room_name)+"Room",
                       [
                         {
-                          text:"확인",onPress:()=>{onRefresh(),console.log(response.data.message,response.status)}
+                          text:"Confim",onPress:()=>{onRefresh(),console.log(response.data.message,response.status)}
                         }
                       ]
                     )
@@ -152,7 +152,7 @@ function accordion(room_name){
     ];
     const swipeoutBtns_adjust =(item)=>[
       {
-        text: '수정',
+        text: 'Adjust',
         type:'default',
         backgroundColor:'#d1eff9',
         component:(
@@ -162,20 +162,25 @@ function accordion(room_name){
             ),
         onPress:()=>{
           Alert.alert(
-            '삭제하시겠습니까?',
-            'hi',
+            'What will you adjust?',
             [
               {
-                text: "취소",
-                onPress: () => console.log("입력취소"),
+                text: "Name",
+                onPress: () => console.log("It is canceled"),
                 style: "cancel"
               },
               {
-                text: "확인",
-                onPress: () => console.log("확인"),
+                text: "Age",
+                onPress: () => console.log("Confirmed"),
                 style: "confirm"
-                
               },
+              {
+                text: "Room",
+                onPress: () => console.log("confirm"),
+              },{
+                text: "Cancel",
+                style:'cancel',
+              }
           ],
           {cancelable: true}
           );
@@ -195,31 +200,86 @@ function accordion(room_name){
 };
 
 // export 
-const Dropdown = () => {
-    return (
-        <RNPickerSelect
-            pickerProps={{
-                accessibilityLabel: selectedItem.title,
-            }}
-        >
-            <Text>{selectedItem.title}</Text>
-            <Text>{selectedItem.description}</Text>
-        </RNPickerSelect>
-    );
-};
+// const Dropdown = () => {
+//     return (
+//         <RNPickerSelect
+//             pickerProps={{
+//                 accessibilityLabel: selectedItem.title,
+//             }}
+//         >
+//             <Text>{selectedItem.title}</Text>
+//             <Text>{selectedItem.description}</Text>
+//         </RNPickerSelect>
+//     );
+// };
   const onRefresh = () => {
     //Clear old data of the list
     setchild_name_list([]);
     //Call the Service to get the latest data
-    getUsers();
+    getUsers().then(console.log).catch(console.log);
+    // Set_Child();
   };
 
+  function SetAge_function(room,child_name,user){
+    console.log(room);
+    Alert.prompt(
+      'How old are you?',
+      'In Number',
+      [
+        {
+          text:"Cancel",
+          onPress: ()=>console.log("It is canceled"),
+          style: "cancel"
+        },
+        {
+          text: "Confirm",
+          style: "confirm",
+          onPress: (grade)=> {grade =>{setgrade(grade)},console.log(grade),axios.post('http://127.0.0.1:8000/child/add-child/',
+          {
+            child_name: (child_name),
+            room: (room),
+            grade: (grade),
+          },{
+            headers: {
+              Authorization:(user)
+            }
+          }).then(function (response) {
+          console.log(response.status);
+          if(response.status==200)// return setTimeout(() => {
+            return Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용
+              (child_name)+" is added",
+              (room)+"room",
+              [
+                {
+                  text:"Confirm",onPress:()=>{onRefresh(),console.log(response.data.message,response.status)}
+                }
+              ]
+            )
+          // },200)
+        }).catch(function (error){
+          console.log(error.response.data.message,error.response.status);
+          })}
+        }
+      ]
+    )
+  }
+
   const getUsers = async () => {
-    const response = await axios.get('http://127.0.0.1:8000/child/add-child/')
+    const response = await axios.get('http://127.0.0.1:8000/child/add-child/');
+    // if(response == 203){
+    //   const jsonValue = await response.json();
+    //   return Promise.resolve(jsonValue);
+    // }
+    // else{
+    //   return Promise.reject('File not found');
+    // }
     console.log(response.data.childs);
     setchild_name_list(response.data.childs);
   };
-  
+  const Set_Child = () => {
+    const data = getUsers().then(console.log).catch(console.log);
+    setchild_name_list(data);
+  }
     const renderItem = ({item}) => (
       
       <Item title={item.child_name} room_name={item.room} age={item.grade} style={styles.back} id={item.id}/>
@@ -227,81 +287,74 @@ const Dropdown = () => {
     useEffect(()=>{
    
     getUsers();
-     console.log(child_name_list)
+    //  console.log(child_name_list)
     
     },[])
 
-
+    LogBox.ignoreLogs(['warning: ...']);
     return (
       <SafeAreaView style={styles.top}>
         <View style={styles.array}>
         <TouchableOpacity onPress={() => {}}>
             <Iconicons name={'trash-outline'} size={40}  color={'white'}/>
             </TouchableOpacity>
-            <Text style={styles.word}>아이들</Text>
+            <Text style={styles.word}>Children</Text>
         <TouchableOpacity onPress={() => {
           Alert.prompt(
-            '이름을 입력해주세요.',
-  '이름',
+            'Please Enter Name',
+  'Name',
   [
     {
-      text: "취소",                              // 버튼 제목
-      onPress: () => console.log("입력취소."),     //onPress 이벤트시 콘솔창에 로그를 찍는다
+      text: "Cancel",                              // 버튼 제목
+      onPress: () => console.log("It is canceled"),     //onPress 이벤트시 콘솔창에 로그를 찍는다
       style: "confirm"
     },
     {
-      text: '확인',
+      text: 'Confirm',
       onPress: (child_name) =>{child_name =>{setchild_name(child_name)},console.log(child_name),Alert.alert(
-        '반을 입력해주세요.',
-        '반 이름',
+        'Room name',
+        'Room',
         [
           { 
-            text:"믿음반",
+            text:"Green",
             style:"confirm",
-            onPress:()=>{console.log("믿음반"),setroom('믿음'),Alert.alert(
-              [
-                {
-                  
-                }
-              ]
-            )},
+            onPress: ()=>{SetAge_function('Green',child_name,user)}
           },
           {
-            text:"가이오반",
+            text:"Blue",
             style:"confirm",
-            onPress:()=>{console.log("가이오반"),setroom('가이오')},
+            onPress: ()=>{SetAge_function('Blue',child_name,user)}
           },
           {
-            text:"해마루반",
+            text:"Orange",
             style:"confirm",
-            onPress:()=>{console.log("해마루반"),setroom('해마루')},
+            onPress: ()=>{SetAge_function('Orange',child_name,user)}
           },
           {
-            text:"레드반",
+            text:"Red",
             style:"confirm",
-            onPress:()=>{console.log("레드반"),setroom('레드')},
+            onPress: ()=>{SetAge_function('Red',child_name,user)}
           },
           {
-            text: "취소",
+            text: "Cancel",
             style:"cancle",
-            onPress: () => console.log("입력취소."),
           }
         ]
         ,
           {
-            text: "확인",
+            text: "Confirm",
             style: "confirm",
             onPress: (room) =>{room =>{setroom(room)},console.log(room),Alert.prompt(
-              '나이를 입력해주세요',
-              '숫자로만 입력하세요',
+              'Name',
+              'Type in Number',
               [
                 {
-                  text:"취소",
+                  text:"Cancel",
                   onPress: ()=>console.log("입력취소"),
                   style: "cancel"
                 },
                 {
-                  text: "확인",
+                  text: "confirm",
                   style: "confirm",
                   onPress: (grade)=> {grade =>{setgrade(grade)},console.log(grade),axios.post('http://127.0.0.1:8000/child/add-child/',
                   {
@@ -316,11 +369,11 @@ const Dropdown = () => {
                   console.log(response.status);
                   if(response.status==200)// return setTimeout(() => {
                     return Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용
-                      (child_name)+"가 추가되었습니다.",
-                      (room)+"반",
+                      (child_name)+" is added",
+                      (room)+"room",
                       [
                         {
-                          text:"확인",onPress:()=>{onRefresh(),console.log(response.data.message,response.status)}
+                          text:"Confirm",onPress:()=>{onRefresh(),console.log(response.data.message,response.status)}
                         }
                       ]
                     )

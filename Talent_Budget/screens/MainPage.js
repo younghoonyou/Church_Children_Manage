@@ -8,8 +8,10 @@ import {
   TouchableOpacity,
   Text,
   StatusBar,
-  Vibration
+  Vibration,
+  LogBox
 } from 'react-native';
+LogBox.ignoreLogs(['warning: ...']);
 import { useReducer } from 'react';
 const data = createContext();
 const MainPage = ({navigation}) => {
@@ -17,7 +19,7 @@ const MainPage = ({navigation}) => {
   const [phone_number, setphone_number] = useState('');
   const [user,setuser]=useState('');
   const Token = (user)
-  useEffect(() => console.log(user), [user]);
+  // useEffect(() => console.log(user), [user]);
   return (
     
     <>
@@ -45,51 +47,48 @@ const MainPage = ({navigation}) => {
                 <TextInput 
                 
                 style={styles.inputBox1}  
-                placeholder="전화번호"
+                placeholder="Tel."
                 
                 placeholderTextColor='white'
                 onChangeText={phone_number => setphone_number(phone_number)}>
                   
                   </TextInput>
                 <TextInput style={styles.inputBox2}  
-                placeholder="비밀번호"
+                placeholder="Pasword"
                 placeholderTextColor='white'
                 secureTextEntry={true}
                 onChangeText={password=> setpassword(password)}
                 />
                 <TouchableOpacity style={styles.button}
-                // onPress={() => Vibration.vibrate()}
                 onPress={()=>{Vibration.vibrate(),
                   axios.post('http://127.0.0.1:8000/account/sign-in/', {
                     phone_number: (phone_number),
                     password: (password)
                   })
                   .then(function (response) {
-                    console.log(response.data.message,response.status);
+                    // console.log(response.data.message,response.status);
                     if(response.status==200)
                     setuser(response.data.access_token);
-                    // user.push(response.data.access_token);
-                    // console.log(user);
                     return navigation.navigate('LoginPage',{Token:response.data.access_token,})
                   })
                   .catch(function (error) {
-                    console.log(error.response.data.message,error.response.status);
+                    // console.log(error.response.data.message,error.response.status);
                   });
                 }}
                 >
-                <Text style={styles.buttonText}>로그인
+                <Text style={styles.buttonText}>Login
                 </Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.button} 
                 onPress={() => navigation.navigate('JoinPage')}>
-                    <Text style={styles.buttonText}>회원가입
+                    <Text style={styles.buttonText}>Sign Up
                     </Text>
                 </TouchableOpacity>
             </View>
         </View>
   </View>
           <View style={styles.bottom}>
-          <Text style={styles.word}  textAlign='center'>하나님을 기쁘시게 하는 교회</Text>
+          <Text style={styles.word}  textAlign='center'>Jesus Loves You</Text>
           </View>
           
           

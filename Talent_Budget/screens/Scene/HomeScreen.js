@@ -12,8 +12,10 @@ import {
   FlatList,
   RefreshControl,
   ActivityIndicator,
+  LogBox,
   } 
   from 'react-native';
+
   Room_color = function(mycolor) {
     return {
       borderRadius: 10,
@@ -48,7 +50,7 @@ import {
       
       const getUsers = async () => {
         const response = await axios.get('http://127.0.0.1:8000/board/add-board/')
-        // console.log(response.data.childs);
+        console.log(response.data.childs);
         setboard_list(response.data.listup);
       };
       const renderItem = ({ item }) => (
@@ -59,16 +61,17 @@ import {
     
     useEffect(()=>{
       getUsers();
-      console.log(board_list)
+      // console.log(board_list)
     },[])
+    LogBox.ignoreLogs(['warning: ...']);
     return (
       
       <SafeAreaView style={styles.top}>
         <View style={styles.array}>
-        <TouchableOpacity onPress={() => {}}>
+        <TouchableOpacity onPress={() => {console.log(user)}}>
             <Iconicons name={'trash-outline'} size={40}  color={'white'}/>
             </TouchableOpacity>
-            <Text style={styles.word}>상품</Text>
+            <Text style={styles.word}>History</Text>
         <TouchableOpacity onPress={() => navigation.navigate('historyScreen',{Token:user})}>
             <Iconicons name={'add-circle-outline'} size={40}  color={'white'}/>
           </TouchableOpacity>

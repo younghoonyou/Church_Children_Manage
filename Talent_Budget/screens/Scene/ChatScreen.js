@@ -7,10 +7,11 @@ import {
   StyleSheet,
   TouchableOpacity,
   Text,
-  View} 
-  from 'react-native';
+  View,
+  LogBox
+}from 'react-native';
   const sampleEvents = [
-    { 'start': '2021-07-25 09:00:00', 'duration': '00:20:00', 'note': 'Walk my dog' },
+    { 'start': '2022-03-13 09:00:00', 'duration': '00:20:00', 'note': 'Walk my dog' },
     { 'start': '2021-08-01 14:00:00', 'duration': '01:00:00', 'note': 'Doctor\'s appointment' },
     { 'start': '2021-08-08 08:00:00', 'duration': '00:30:00', 'note': 'Morning exercise' },
     { 'start': '2021-08-15 14:00:00', 'duration': '02:00:00', 'note': 'Meeting with client' },
@@ -25,13 +26,14 @@ import {
 class ChatScreen extends React.Component {
   
   render() {
+    LogBox.ignoreLogs(['warning: ...']);
     return (
       <SafeAreaView style={styles.top}>
         <View style={styles.array}>
         <TouchableOpacity onPress={() => {}}>
             <Iconicons name={'trash-outline'} size={40}  color={'white'}/>
             </TouchableOpacity>
-            <Text style={styles.word}>스티커</Text>
+            <Text style={styles.word}>Schedule</Text>
         <TouchableOpacity onPress={() => {}}>
             <Iconicons name={'add-circle-outline'} size={40}  color={'white'}/>
             </TouchableOpacity>

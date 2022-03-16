@@ -7,19 +7,20 @@ import {
   Text,
   TextInput,
   View,
-  Alert} 
-  from 'react-native';
+  Alert,
+  LogBox
+}from 'react-native';
   const historyScreen = ({navigation,route}) => {
     const [title, settitle] = useState('');
     const [contents, setcontents] = useState('');
-    const data = route.params.Token
+    const data = route.params.Token;
+    LogBox.ignoreLogs(['warning: ...']);
     return (
-      
       <SafeAreaView style={styles.top}>
         <View style={styles.array}>
         <TouchableOpacity onPress={() =>{navigation.pop()}}>
         <View style={styles.button}>
-            <Text style={styles.buttonword}>취소</Text>
+            <Text style={styles.buttonword}>Cancle</Text>
         </View>
             </TouchableOpacity>
         <TouchableOpacity onPress={() => {axios.post('http://127.0.0.1:8000/board/add-board/',
@@ -56,7 +57,7 @@ import {
                   })
         }}>
         <View style={styles.button}>
-            <Text style={styles.buttonword}>확인</Text>
+            <Text style={styles.buttonword}>Confirm</Text>
         </View>
             </TouchableOpacity>
             </View>
@@ -65,7 +66,7 @@ import {
             <View style={styles.board}>
                 <View style={styles.titleback}>
         <TextInput style={styles.inputBox2}  
-                placeholder="제목"
+                placeholder="Title"
                 placeholderTextColor='white'
                 onChangeText={title => settitle(title)}/>
                 </View>

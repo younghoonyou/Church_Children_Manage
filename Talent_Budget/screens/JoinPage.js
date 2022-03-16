@@ -1,6 +1,5 @@
 import React ,{useState,useContext}from 'react';
 import axios from 'axios';
-import global from './global';
 import {
   StyleSheet,
   View,
@@ -9,8 +8,10 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   Text,
-  Alert
+  Alert,
+  LogBox
 } from 'react-native';
+LogBox.ignoreLogs(['warning: ...']);
 import Iconicons from 'react-native-vector-icons/Ionicons';
 import { createContext } from 'react/cjs/react.development';
 const JoinPage = ({navigation}) => {
@@ -23,12 +24,12 @@ const JoinPage = ({navigation}) => {
   // const data = createContext(user);
   function error1(){
     if(((password)!=(passwordconfirm))&&(password!='')&&(passwordconfirm!='')){
-      return "비밀번호가 맞지 않습니다"
+      return "Wrong Password"
     }
   };
   function error2(){
     if(((phone_number.length)!=(11))&&(phone_number!='')){
-      return "전화번호 11자리를 입력해주세요"
+      return "Please Enter 11 length"
     }
   };
   function op(){
@@ -73,23 +74,23 @@ const JoinPage = ({navigation}) => {
                 <View style={styles.name}>
                 
                 <TextInput style={styles.inputBox2}  
-                placeholder="이름"
+                placeholder="Name"
                 placeholderTextColor='white'
                 onChangeText={name => setname(name)}/>
                 <TextInput style={styles.inputBox2}  
-                placeholder="전화번호"
+                placeholder="Phone Number"
                 placeholderTextColor='white'
                 onChangeText={phone_number => setphone_number(phone_number)}
                 keyboardType="number-pad"/>
                 </View>
                 <View style={styles.container}>
                 <TextInput style={styles.inputBox}  
-                placeholder="비밀번호"
+                placeholder="Password"
                 placeholderTextColor='white'
                 secureTextEntry={true}
                 onChangeText={password => setpassword(password)}/>
                 <TextInput style={styles.inputBox}  
-                placeholder="비밀번호 확인"
+                placeholder="Password Confirm"
                 placeholderTextColor='white'
                 secureTextEntry={true}
                 onChangeText={passwordconfirm => setpasswordconfirm(passwordconfirm)}/>
@@ -102,22 +103,15 @@ const JoinPage = ({navigation}) => {
                     password: (password),
                     phone_number: (phone_number),
                   }).then(function(response){
-                    // setuser(response.data.access_token);
-                    // user.push(response.data.access_token);
-                    // export const token_data = createContext(response.data.access_token)
-                    // setuser(user => user.concat(response.data.access_token))
-                    // console.log(token_data._currentValue)
-                    // console.log(user);
-                    // console.log(data);
                   if(response.status==201)// 
                   return setTimeout(() => {
                     setLoading(false);
                   Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용 return 지우기
-                    "가입을 축하드립니다",
-                    "빛이 있으라",
+                    "Glad to join us",
+                    "God Bless You",
                     [
                       {
-                        text:"확인",onPress:()=>navigation.navigate('MainPage'),
+                        text:"Confirm",onPress:()=>navigation.navigate('MainPage'),
                         
                       }
                     ]
@@ -127,7 +121,7 @@ const JoinPage = ({navigation}) => {
                   })}}
                 disabled={op()}
                 style={op() ? styles.button:styles.button2}>
-                    <Text style={styles.buttonText}>확인</Text>
+                    <Text style={styles.buttonText}>Confirm</Text>
                 </TouchableOpacity>
             </View>
             <View setlye={styles.errorblank}>
@@ -139,7 +133,7 @@ const JoinPage = ({navigation}) => {
 </View>
                 <View style={styles.bottom}>
           <TextInput style={styles.word}  
-                placeholder="하나님을 기쁘시게 하는 교회"
+                placeholder="Jesus Loves You"
                 placeholderTextColor='white'
                 textAlign='center'/>
           </View>

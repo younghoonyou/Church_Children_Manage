@@ -9,12 +9,14 @@ import {NavigationContainer} from '@react-navigation/native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {
   StyleSheet,
+  LogBox,
 } from 'react-native';
 const Stack = createStackNavigator();
 const App: () => React$Node = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
+  LogBox.ignoreLogs(['Warning: ...']);
   return (
 <>
 <NavigationContainer>
