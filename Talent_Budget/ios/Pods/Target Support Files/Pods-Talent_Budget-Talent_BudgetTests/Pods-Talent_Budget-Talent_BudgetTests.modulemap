@@ -1,0 +1,6 @@
+module Pods_Talent_Budget_Talent_BudgetTests {
+  umbrella header "Pods-Talent_Budget-Talent_BudgetTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
