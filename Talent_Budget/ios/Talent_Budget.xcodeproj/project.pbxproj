@@ -145,7 +145,6 @@
 				B6E8DE98878080A2211F65FC /* Pods-Talent_Budget-Talent_BudgetTests.debug.xcconfig */,
 				FB3F12A81E1996384F6FC275 /* Pods-Talent_Budget-Talent_BudgetTests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -432,6 +431,7 @@
 			baseConfigurationReference = B6E8DE98878080A2211F65FC /* Pods-Talent_Budget-Talent_BudgetTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = N4P2ZW3F6T;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
@@ -460,6 +460,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = N4P2ZW3F6T;
 				INFOPLIST_FILE = Talent_BudgetTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = (

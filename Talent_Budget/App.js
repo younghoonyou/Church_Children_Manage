@@ -16,7 +16,6 @@ const App: () => React$Node = () => {
   useEffect(() => {
     SplashScreen.hide();
   }, []);
-  LogBox.ignoreLogs(['Warning: ...']);
   return (
 <>
 <NavigationContainer>

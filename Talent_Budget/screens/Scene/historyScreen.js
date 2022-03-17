@@ -14,7 +14,11 @@ import {
     const [title, settitle] = useState('');
     const [contents, setcontents] = useState('');
     const data = route.params.Token;
-    LogBox.ignoreLogs(['warning: ...']);
+    LogBox.ignoreLogs([
+      'componentWillMount',
+      'componentWillUpdate',
+      'componentWillReceiveProps'
+    ])
     return (
       <SafeAreaView style={styles.top}>
         <View style={styles.array}>
@@ -23,7 +27,8 @@ import {
             <Text style={styles.buttonword}>Cancle</Text>
         </View>
             </TouchableOpacity>
-        <TouchableOpacity onPress={() => {axios.post('http://127.0.0.1:8000/board/add-board/',
+        <TouchableOpacity onPress={() => {
+          axios.post('http://127.0.0.1:8000/board/add-board/',
                   {
                     title: (title),
                     contents: (contents),
@@ -38,15 +43,15 @@ import {
                   if(response.status==200)
                   return setTimeout(() => {
                        Alert.alert(                    // 말그대로 Alert를 띄운다
-                        "글을 작성하시겠습니까?",                    // 첫번째 text: 타이틀 제목
-                        "회의록",                         // 두번째 text: 그 밑에 작은 제목
+                        "Do you want Post?",                    // 첫번째 text: 타이틀 제목
+                        "History",                         // 두번째 text: 그 밑에 작은 제목
                         [                              // 버튼 배열
                         {
-                            text: "취소",                              // 버튼 제목
-                            onPress: () => console.log("입력취소"),     //onPress 이벤트시 콘솔창에 로그를 찍는다
+                            text: "Cancel",                              // 버튼 제목
+                            onPress: () => console.log("It is canceled"),     //onPress 이벤트시 콘솔창에 로그를 찍는다
                             style: "cancel"
                         },
-                        { text: "확인", onPress: () => {console.log(response.data.message),navigation.pop()}}, //버튼 제목
+                        { text: "Confirm", onPress: () => {console.log(response.data.message),navigation.pop()}}, //버튼 제목
                                                                                 // 이벤트 발생시 로그를 찍는다
                         ],
                         { cancelable: false }
@@ -55,7 +60,8 @@ import {
                 }).catch(function (error){
                   console.log(error.response.data.message,error.response.status);
                   })
-        }}>
+        }
+        }>
         <View style={styles.button}>
             <Text style={styles.buttonword}>Confirm</Text>
         </View>
@@ -72,7 +78,7 @@ import {
                 </View>
                 <View style={styles.context}>
                 <TextInput style={styles.inputBox2}  
-                placeholder="내용"
+                placeholder="Contents"
                 placeholderTextColor='white'
                 onChangeText={contents => setcontents(contents)}/>
                 </View>

@@ -15,7 +15,7 @@ import {
   Alert,
   RefreshControl,
   ActivityIndicator,
-  LogBox
+  LogBox,
 }from 'react-native';
 import { useEffect } from 'react';
 Room_color = function(mycolor) {
@@ -29,6 +29,11 @@ Room_color = function(mycolor) {
     flexDirection:'row',
   }
 }
+LogBox.ignoreLogs([
+  'componentWillMount',
+  'componentWillUpdate',
+  'componentWillReceiveProps'
+])
 function Room_auto(room_name){
   if((room_name)=='Green'){
     return Room_color('#d2f1db')
@@ -80,7 +85,7 @@ function accordion(room_name){
       <Collapse>
       <CollapseHeader>
       <View style={Room_auto(room_name)}>
-        <Text style={styles.title}>{title}   {age}살</Text>
+        <Text style={styles.title}>{title}   {age} Ages</Text>
         <Text style={styles.room_name}>{room_name}</Text>
       </View>
       {/* </TouchableOpacity> */}
@@ -216,7 +221,13 @@ function accordion(room_name){
     //Clear old data of the list
     setchild_name_list([]);
     //Call the Service to get the latest data
-    getUsers().then(console.log).catch(console.log);
+    getUsers().then(
+      (response)=>{
+        console.log(response.data.childs);
+        setchild_name_list(response.data.childs);
+      }
+    ).catch(console.log);
+    // getUsers().then(console.log).catch(console.log);
     // Set_Child();
   };
 
@@ -266,15 +277,18 @@ function accordion(room_name){
 
   const getUsers = async () => {
     const response = await axios.get('http://127.0.0.1:8000/child/add-child/');
-    // if(response == 203){
-    //   const jsonValue = await response.json();
-    //   return Promise.resolve(jsonValue);
-    // }
-    // else{
-    //   return Promise.reject('File not found');
-    // }
-    console.log(response.data.childs);
-    setchild_name_list(response.data.childs);
+    // console.log(response.status);
+    if(response.status == 203){
+      const jsonValue = await response;
+      // console.log(jsonValue);sds
+      // setchild_name_list(response.data.childs);
+      return Promise.resolve(jsonValue);//
+    }
+    else{
+      return Promise.reject('File not found');
+    }
+    // console.log(response.data.childs);
+    // setchild_name_list(response.data.childs);
   };
   const Set_Child = () => {
     const data = getUsers().then(console.log).catch(console.log);
@@ -285,8 +299,17 @@ function accordion(room_name){
       <Item title={item.child_name} room_name={item.room} age={item.grade} style={styles.back} id={item.id}/>
     );
     useEffect(()=>{
-   
-    getUsers();
+      onRefresh();
+    // getUsers().then(
+    //   (response)=>{
+    //     console.log(response.data.childs);
+    //     setchild_name_list(response.data.childs);
+    //   }
+      // function(response){
+      //   console.log(response.data);
+      //   setchild_name_list(response.data.childs);
+      // }
+    // ).catch(console.log);
     //  console.log(child_name_list)
     
     },[])

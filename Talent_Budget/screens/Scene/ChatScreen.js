@@ -22,11 +22,14 @@ import {
     { 'start': '2020-03-26 18:00:00', 'duration': '02:00:00', 'note': 'Schedule 4' },
     { 'start': '2020-03-26 22:00:00', 'duration': '01:00:00', 'note': 'Schedule 5' }
   ]
-
+  LogBox.ignoreLogs([
+    'componentWillMount',
+    'componentWillUpdate',
+    'componentWillReceiveProps'
+  ])
 class ChatScreen extends React.Component {
   
   render() {
-    LogBox.ignoreLogs(['warning: ...']);
     return (
       <SafeAreaView style={styles.top}>
         <View style={styles.array}>
