@@ -61,5 +61,20 @@ ios/Podfile
 /Talent_Budget/ios/Pods/
 ios/Podfile.lock
 
-**/__pycache__/
-backend/mysite/mysite/
+backend/mysite/mysite/settings.py
+.flowconfig
+.eslintrc.js
+.editorconfig
+.buckconfig
+.gitattributes
+.prettierrc.js
+.watchmanconfig
+babel.config.js
+Podfile
+*.plist
+*.json
+*.lock
+image/
+android/
+.vscode
+__tests__/
