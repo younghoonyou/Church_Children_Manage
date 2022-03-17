@@ -11,8 +11,12 @@ import {
   Vibration,
   LogBox
 } from 'react-native';
-LogBox.ignoreLogs(['warning: ...']);
-import { useReducer } from 'react';
+LogBox.ignoreLogs([
+  'componentWillMount',
+  'componentWillUpdate',
+  'componentWillReceiveProps'
+])
+LogBox.ignoreLogs(['Sending']);
 const data = createContext();
 const MainPage = ({navigation}) => {
   const [password, setpassword] = useState('');
@@ -61,7 +65,7 @@ const MainPage = ({navigation}) => {
                 />
                 <TouchableOpacity style={styles.button}
                 onPress={()=>{Vibration.vibrate(),
-                  axios.post('http://127.0.0.1:8000/account/sign-in/', {
+                  axios.post('http://52.79.201.37:8000/account/sign-in/', {
                     phone_number: (phone_number),
                     password: (password)
                   })

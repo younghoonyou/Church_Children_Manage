@@ -122,7 +122,7 @@ function accordion(room_name){
               },
               {
                 text: "Confirm",
-                onPress: () => {axios.delete('http://127.0.0.1:8000/child/delete-child/',
+                onPress: () => {axios.delete('http://52.79.201.37:8000/child/delete-child/',
                 {
                  headers:{
                   Authorization:(user)
@@ -290,10 +290,10 @@ function accordion(room_name){
     // console.log(response.data.childs);
     // setchild_name_list(response.data.childs);
   };
-  const Set_Child = () => {
-    const data = getUsers().then(console.log).catch(console.log);
-    setchild_name_list(data);
-  }
+  // const Set_Child = () => {
+  //   const data = getUsers().then(console.log).catch(console.log);
+  //   setchild_name_list(data);
+  // }
     const renderItem = ({item}) => (
       
       <Item title={item.child_name} room_name={item.room} age={item.grade} style={styles.back} id={item.id}/>

@@ -7,15 +7,18 @@ from auths import jwt_enc
 class SignUpView(View):
     def post(self,request):
         data=json.loads(request.body)
-        if Account.objects.filter(phone_number=data['phone_number']).exists() or Account.objects.filter(name=data['name']).exists():
-            return JsonResponse({'message':'이미 등록된 이메일 입니다.'},status=400)
-        else:
-            new_user=Account.objects.create(
-            name=data['name'],
-            password=data['password'],
-            phone_number=data['phone_number'],
-            )
-        return JsonResponse({'message':f'{new_user.name}님 회원가입'}, status=201)
+        try:
+            if Account.objects.filter(phone_number=data['phone_number']).exists() or Account.objects.filter(name=data['name']).exists():
+                return JsonResponse({'message':'이미 등록된 이메일 입니다.'},status=400)
+            else:
+                new_user=Account.objects.create(
+                name=data['name'],
+                password=data['password'],
+                phone_number=data['phone_number'],
+                )
+            return JsonResponse({'message':f'{new_user.name}님 회원가입'}, status=201)
+        except Exception:
+            return JsonResponse({'message':"IVALID_KEYS"}, status=400)
     def get(self,request):
         Account_data=Account.objects.values()
         return JsonResponse({'accounts':list(Account_data)},status=200)

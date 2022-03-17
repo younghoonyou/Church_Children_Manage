@@ -28,7 +28,7 @@ import {
         </View>
             </TouchableOpacity>
         <TouchableOpacity onPress={() => {
-          axios.post('http://127.0.0.1:8000/board/add-board/',
+          axios.post('http://52.79.201.37:8000/board/add-board/',
                   {
                     title: (title),
                     contents: (contents),

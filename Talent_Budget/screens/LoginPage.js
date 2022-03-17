@@ -5,7 +5,11 @@ import SettingsScreen from './Scene/SettingsScreen';
 import Iconicons from 'react-native-vector-icons/Ionicons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import {LogBox} from 'react-native';
-LogBox.ignoreLogs(['warning: ...']);
+LogBox.ignoreLogs([
+  'componentWillMount',
+  'componentWillUpdate',
+  'componentWillReceiveProps'
+])
 const Tab = createBottomTabNavigator();
 const LoginPage = ({route}) => {
   const data = route.params.Token

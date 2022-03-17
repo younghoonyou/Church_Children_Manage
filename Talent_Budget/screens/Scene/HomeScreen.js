@@ -16,7 +16,11 @@ import {
   LogBox,
   } 
   from 'react-native';
-
+  LogBox.ignoreLogs([
+    'componentWillMount',
+    'componentWillUpdate',
+    'componentWillReceiveProps'
+  ])
   Room_color = function(mycolor) {
     return {
       borderRadius: 10,
@@ -88,7 +92,7 @@ import {
      
       
       const getUsers = async () => {
-        const response = await axios.get('http://127.0.0.1:8000/board/add-board/');
+        const response = await axios.get('http://52.79.201.37:8000/board/add-board/');
         console.log(response.data);
         if(response.status == 200){
           const jsonValue = await response;

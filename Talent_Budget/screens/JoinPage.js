@@ -11,7 +11,11 @@ import {
   Alert,
   LogBox
 } from 'react-native';
-LogBox.ignoreLogs(['warning: ...']);
+LogBox.ignoreLogs([
+  'componentWillMount',
+  'componentWillUpdate',
+  'componentWillReceiveProps'
+])
 import Iconicons from 'react-native-vector-icons/Ionicons';
 import { createContext } from 'react/cjs/react.development';
 const JoinPage = ({navigation}) => {
@@ -40,7 +44,32 @@ const JoinPage = ({navigation}) => {
     return false
     }
   };
- 
+
+  const Server = async () => {
+    const response = await axios.post('http://52.79.201.37:8000/account/sign-up/',
+    {
+      name: (name),
+      password: (password),
+      phone_number: (phone_number),
+    });
+    if(response.status == 201){
+      return Promise.resolve(setLoading(true),setTimeout(() => {
+        setLoading(false);
+      Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용 return 지우기
+        "Glad to join us",
+        "God Bless You",
+        [
+          {
+            text:"Confirm",onPress:()=>navigation.navigate('MainPage'),
+            
+          }
+        ]
+      )},3000));
+    }
+    else{
+      return Promise.reject('It does not work');
+    }
+  }
   const startLoading = () => {
     setLoading(true);
     setTimeout(() => {
@@ -97,28 +126,31 @@ const JoinPage = ({navigation}) => {
 
                 <TouchableOpacity
                 
-                onPress={()=>{setLoading(true),axios.post('http://127.0.0.1:8000/account/sign-up/',
-                  {
-                    name: (name),
-                    password: (password),
-                    phone_number: (phone_number),
-                  }).then(function(response){
-                  if(response.status==201)// 
-                  return setTimeout(() => {
-                    setLoading(false);
-                  Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용 return 지우기
-                    "Glad to join us",
-                    "God Bless You",
-                    [
-                      {
-                        text:"Confirm",onPress:()=>navigation.navigate('MainPage'),
+                onPress={()=>{Server().then((response)=>{
+                  // console.log(response);
+                }).catch(console.log)}}
+                // onPress={()=>{setLoading(true),axios.post('http://127.0.0.1:8000/account/sign-up/',
+                //   {
+                //     name: (name),
+                //     password: (password),
+                //     phone_number: (phone_number),
+                //   }).then(function(response){
+                //   if(response.status==201)// 
+                //   return setTimeout(() => {
+                //     setLoading(false);
+                //   Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용 return 지우기
+                //     "Glad to join us",
+                //     "God Bless You",
+                //     [
+                //       {
+                //         text:"Confirm",onPress:()=>navigation.navigate('MainPage'),
                         
-                      }
-                    ]
-                  )},3000)//response.data.access_token -> user 
-                }).catch(function (error){
-                  console.log(error.response.data.message,error.response.status);
-                  })}}
+                //       }
+                //     ]
+                //   )},3000)//response.data.access_token -> user 
+                // }).catch(function (error){
+                //   console.log(error.response.data.message,error.response.status);
+                //   })}}
                 disabled={op()}
                 style={op() ? styles.button:styles.button2}>
                     <Text style={styles.buttonText}>Confirm</Text>
