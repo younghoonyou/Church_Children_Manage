@@ -1,7 +1,11 @@
 # Manage Church Children App💒
+
+<div align="center">
   
 ##  Tech Stack
 ![django](https://img.shields.io/badge/Django-092E20?style=round-square&logo=django&logoColor=white) ![aws](https://img.shields.io/badge/AWS-232F3E?style=round-square&logo=amazonaws&logoColor=yellow) ![mysql](https://img.shields.io/badge/Mysql-4479A1?style=round-square&logo=mysql&logoColor=white)
+  
+  </div>
 
   > ## Icon & Splash screen & Diagram
 
