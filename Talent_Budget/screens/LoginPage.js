@@ -13,7 +13,6 @@ LogBox.ignoreLogs([
 const Tab = createBottomTabNavigator();
 const LoginPage = ({route}) => {
   const data = route.params.Token
-  // console.log(data)
   return (
     <Tab.Navigator 
     screenOptions={({ route }) => ({

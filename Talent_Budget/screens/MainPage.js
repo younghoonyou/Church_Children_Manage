@@ -1,5 +1,6 @@
 import React,{useState,useEffect,createContext}  from 'react';
 import axios from 'axios';
+import AWS_PUBLIC_ADDR from '../../backend/mysite/mysite/settings.py' 
 import {
   StyleSheet,
   View,
@@ -9,7 +10,8 @@ import {
   Text,
   StatusBar,
   Vibration,
-  LogBox
+  LogBox,
+  VirtualizedList
 } from 'react-native';
 LogBox.ignoreLogs([
   'componentWillMount',
@@ -18,12 +20,36 @@ LogBox.ignoreLogs([
 ])
 LogBox.ignoreLogs(['Sending']);
 const data = createContext();
+
 const MainPage = ({navigation}) => {
   const [password, setpassword] = useState('');
   const [phone_number, setphone_number] = useState('');
   const [user,setuser]=useState('');
-  const Token = (user)
-  // useEffect(() => console.log(user), [user]);
+  const Token = (user);
+  const AWS_URL_SIGN_IN = 'http://' + AWS_PUBLIC_ADDR + ':8000/account/sign-in/';
+  const Server = async () => {
+    const response = await axios.post(AWS_URL_SIGN_IN,
+      {
+        password: (password),
+        phone_number: (phone_number),
+      });
+      if(response.status == 201){
+        console.log(response.data.message);
+        return Promise.resolve(
+          setuser(response.data.access_token),
+          navigation.navigate('LoginPage',{Token:response.data.access_token})
+        )
+      }
+      else{
+        return Promise.reject(
+          Vibration.vibrate(),
+          console.log('Wrong ID/Password'),
+        );
+      }
+  }
+  const onRefresh = () => {
+    Server().then((response)=>{}).catch((err)=>{})
+  }
   return (
     
     <>
@@ -58,27 +84,13 @@ const MainPage = ({navigation}) => {
                   
                   </TextInput>
                 <TextInput style={styles.inputBox2}  
-                placeholder="Pasword"
+                placeholder="Password"
                 placeholderTextColor='white'
                 secureTextEntry={true}
                 onChangeText={password=> setpassword(password)}
                 />
                 <TouchableOpacity style={styles.button}
-                onPress={()=>{Vibration.vibrate(),
-                  axios.post('http://52.79.201.37:8000/account/sign-in/', {
-                    phone_number: (phone_number),
-                    password: (password)
-                  })
-                  .then(function (response) {
-                    // console.log(response.data.message,response.status);
-                    if(response.status==200)
-                    setuser(response.data.access_token);
-                    return navigation.navigate('LoginPage',{Token:response.data.access_token,})
-                  })
-                  .catch(function (error) {
-                    // console.log(error.response.data.message,error.response.status);
-                  });
-                }}
+                onPress={()=>{onRefresh()}}
                 >
                 <Text style={styles.buttonText}>Login
                 </Text>

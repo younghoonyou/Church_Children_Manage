@@ -16,6 +16,7 @@ import {
   LogBox,
   } 
   from 'react-native';
+  import AWS_PUBLIC_ADDR from '../../../backend/mysite/mysite/settings.py'
   LogBox.ignoreLogs([
     'componentWillMount',
     'componentWillUpdate',
@@ -50,35 +51,11 @@ import {
     </CollapseBody>
       </Collapse>
     )};
-
-    // <Collapse>
-    //   <CollapseHeader>
-    //   <View style={Room_auto('#deeced')}>
-    //     {/* <Text style={styles.title}>{title}   {age} Ages</Text> */}
-    //     <Text style={styles.room_name}>{room_name}</Text>
-    //   </View>
-    //   {/* </TouchableOpacity> */}
-    //   </CollapseHeader>
-    //   <CollapseBody>
-    //   <View style={accordion(room_name)}>
-    //   <Text style={styles.date}>{data.substr(0,4) + '/' + data.substr(5,2) + '/' + data.substr(8,2)}</Text>
-    //   </View>
-    // </CollapseBody>
-    //   </Collapse>
-
-
-
-    // <View style={Room_color('#deeced')}>
-      {/* <Text style={styles.title}>Title : {title}</Text>
-      <Text style={styles.room_name}>Writer : {room_name}</Text> */}
-    //   <Text style={styles.date}>{data.substr(0,4) + '/' + data.substr(5,2) + '/' + data.substr(8,2)}</Text>
-    // </View>
-  // );
-
     const HomeScreen = ({navigation,route}) => {
       const [refreshing, setRefreshing] = useState(false);
       const [board_list, setboard_list] = useState([]);
       const user = route.params.Token
+      const AWS_URL_ADD_BOARD = 'http://' + AWS_PUBLIC_ADDR + ':8000/board/add-board/';
       const onRefresh = () => {
         //Clear old data of the list
         setboard_list([]);
@@ -92,7 +69,7 @@ import {
      
       
       const getUsers = async () => {
-        const response = await axios.get('http://52.79.201.37:8000/board/add-board/');
+        const response = await axios.get(AWS_URL_ADD_BOARD);
         console.log(response.data);
         if(response.status == 200){
           const jsonValue = await response;
@@ -101,8 +78,6 @@ import {
         else{
           return Promise.reject('File dose not exist');
         }
-        // console.log(response.data.childs);
-        // setboard_list(response.data.listup);
       };
       const renderItem = ({ item }) => (
       <TouchableOpacity onPress={()=>{}}>
@@ -112,12 +87,6 @@ import {
     
     useEffect(()=>{
       onRefresh();
-      // getUsers().then(
-      //   function(response){
-      //     setboard_list(response.data.listup);
-      //   }
-      // ).catch(console.log);
-      // console.log(board_list)
     },[])
     return (
       
@@ -132,7 +101,6 @@ import {
           </TouchableOpacity>
             </View>
       <View style={styles.container}>
-        {/* <View style={styles.body}> */}
         {refreshing ? <ActivityIndicator /> : null}
         <FlatList
         data={board_list}

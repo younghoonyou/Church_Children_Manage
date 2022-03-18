@@ -10,10 +10,12 @@ import {
   Alert,
   LogBox
 }from 'react-native';
+import AWS_PUBLIC_ADDR from '../../../backend/mysite/mysite/settings.py'
   const historyScreen = ({navigation,route}) => {
     const [title, settitle] = useState('');
     const [contents, setcontents] = useState('');
     const data = route.params.Token;
+    const AWS_URL_ADD_BOARD = 'http://' + AWS_PUBLIC_ADDR + ':8000/board/add-board/';
     LogBox.ignoreLogs([
       'componentWillMount',
       'componentWillUpdate',
@@ -28,7 +30,7 @@ import {
         </View>
             </TouchableOpacity>
         <TouchableOpacity onPress={() => {
-          axios.post('http://52.79.201.37:8000/board/add-board/',
+          axios.post(AWS_URL_ADD_BOARD,
                   {
                     title: (title),
                     contents: (contents),

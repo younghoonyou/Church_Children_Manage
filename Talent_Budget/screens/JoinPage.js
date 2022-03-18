@@ -1,4 +1,4 @@
-import React ,{useState,useContext}from 'react';
+import React ,{useState}from 'react';
 import axios from 'axios';
 import {
   StyleSheet,
@@ -17,7 +17,7 @@ LogBox.ignoreLogs([
   'componentWillReceiveProps'
 ])
 import Iconicons from 'react-native-vector-icons/Ionicons';
-import { createContext } from 'react/cjs/react.development';
+import AWS_PUBLIC_ADDR from '../../backend/mysite/mysite/settings.py' 
 const JoinPage = ({navigation}) => {
   const [password, setpassword] = useState('');
   const [passwordconfirm, setpasswordconfirm] = useState('');
@@ -25,7 +25,7 @@ const JoinPage = ({navigation}) => {
   const [name, setname] = useState('');
   const [user, setuser] = useState([]);
   const [loading, setLoading] = useState(false);
-  // const data = createContext(user);
+  const AWS_URL_SIGN_UP = 'http://' + AWS_PUBLIC_ADDR + ':8000/account/sign-up/';
   function error1(){
     if(((password)!=(passwordconfirm))&&(password!='')&&(passwordconfirm!='')){
       return "Wrong Password"
@@ -46,7 +46,7 @@ const JoinPage = ({navigation}) => {
   };
 
   const Server = async () => {
-    const response = await axios.post('http://52.79.201.37:8000/account/sign-up/',
+    const response = await axios.post(AWS_URL_SIGN_UP,
     {
       name: (name),
       password: (password),
@@ -64,44 +64,32 @@ const JoinPage = ({navigation}) => {
             
           }
         ]
-      )},3000));
+      )},3000),console.log(response.data.message));
     }
     else{
       return Promise.reject('It does not work');
     }
   }
-  const startLoading = () => {
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-    }, 4000);
-  };
   return (
     <>
         <View style={styles.view}>
-            
             <TouchableOpacity style={styles.back} onPress={() => {navigation.pop()}}>
             <Iconicons name={'arrow-back-circle-outline'} size={50}  color={'white'}/>
             </TouchableOpacity>
-            
-            
             <ImageBackground 
           source={require('../image/jesus2.png')}
           style={styles.background}
           imageStyle={styles.logo}>
-   </ImageBackground>
-   <ImageBackground 
+          </ImageBackground>
+          <ImageBackground 
           source={require('../image/logo.png')}
           style={styles.background}
           imageStyle={styles.logo3}>
-   </ImageBackground>
-  
-   <View style={styles.blank}>
-   <ActivityIndicator style={styles.bar} textContent={'Loading...'} textStyle={styles.spinnerTextStyle} animating={loading} size={'large'} color={'black'}/>
-   <View stlye={styles.logbutton}>
-            
+         </ImageBackground>
+        <View style={styles.blank}>
+        <ActivityIndicator style={styles.bar} textContent={'Loading...'} textStyle={styles.spinnerTextStyle} animating={loading} size={'large'} color={'black'}/>
+        <View stlye={styles.logbutton}>    
                 <View style={styles.name}>
-                
                 <TextInput style={styles.inputBox2}  
                 placeholder="Name"
                 placeholderTextColor='white'
@@ -123,34 +111,9 @@ const JoinPage = ({navigation}) => {
                 placeholderTextColor='white'
                 secureTextEntry={true}
                 onChangeText={passwordconfirm => setpasswordconfirm(passwordconfirm)}/>
-
                 <TouchableOpacity
-                
                 onPress={()=>{Server().then((response)=>{
-                  // console.log(response);
                 }).catch(console.log)}}
-                // onPress={()=>{setLoading(true),axios.post('http://127.0.0.1:8000/account/sign-up/',
-                //   {
-                //     name: (name),
-                //     password: (password),
-                //     phone_number: (phone_number),
-                //   }).then(function(response){
-                //   if(response.status==201)// 
-                //   return setTimeout(() => {
-                //     setLoading(false);
-                //   Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용 return 지우기
-                //     "Glad to join us",
-                //     "God Bless You",
-                //     [
-                //       {
-                //         text:"Confirm",onPress:()=>navigation.navigate('MainPage'),
-                        
-                //       }
-                //     ]
-                //   )},3000)//response.data.access_token -> user 
-                // }).catch(function (error){
-                //   console.log(error.response.data.message,error.response.status);
-                //   })}}
                 disabled={op()}
                 style={op() ? styles.button:styles.button2}>
                     <Text style={styles.buttonText}>Confirm</Text>
@@ -181,7 +144,6 @@ const styles = StyleSheet.create({
   },
   back:{
         marginTop:40,
-        // paddingTop:80,
         marginLeft:5,
         marginRight:330,
   },

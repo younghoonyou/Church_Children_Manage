@@ -2,8 +2,6 @@ import React,{useState} from 'react';
 import Iconicons from 'react-native-vector-icons/Ionicons';
 import axios from 'axios';
 import Swipeout from 'react-native-swipeout';
-import NumberPlease from "react-native-number-please";
-import RNPickerSelect from 'react-native-picker-select';
 import {Collapse,CollapseHeader, CollapseBody, AccordionList} from 'accordion-collapse-react-native';
 import {
   SafeAreaView,
@@ -18,6 +16,7 @@ import {
   LogBox,
 }from 'react-native';
 import { useEffect } from 'react';
+import AWS_PUBLIC_ADDR from '../../../backend/mysite/mysite/settings.py'
 Room_color = function(mycolor) {
   return {
     borderRadius: 10,
@@ -29,6 +28,7 @@ Room_color = function(mycolor) {
     flexDirection:'row',
   }
 }
+LogBox.ignoreLogs(['warning: ...']);
 LogBox.ignoreLogs([
   'componentWillMount',
   'componentWillUpdate',
@@ -66,15 +66,6 @@ function accordion(room_name){
   else
   return Room_color('#deeced')
 }
-
-  // const Item = ({ title,room_name,age }) => (
-  //   <Swipeout autoClose={true} style={styles.back} right={swipeoutBtns_delete} left={swipeoutBtns_adjust}>
-  //   <View style={Room_auto(room_name)}>
-  //     <Text style={styles.title}>{title}   {age}</Text>
-  //     <Text style={styles.room_name}>{room_name}</Text>
-  //   </View>
-  //   </Swipeout>
-  // );
   const SettingsScreen = ({route}) => {
     const Item = ({ title,room_name,age,id }) => {
       const right_buttons = swipeoutBtns_delete(title,id,room_name);
@@ -99,6 +90,7 @@ function accordion(room_name){
       </Collapse>
       </Swipeout>
       )};
+    const AWS_URL_DELETE_CHILD = 'http://' + AWS_PUBLIC_ADDR + ':8000/child/delete-child/';
     const swipeoutBtns_delete =(item,id,room_name)=>[
       {
         text: 'Delete',
@@ -122,7 +114,7 @@ function accordion(room_name){
               },
               {
                 text: "Confirm",
-                onPress: () => {axios.delete('http://52.79.201.37:8000/child/delete-child/',
+                onPress: () => {axios.delete(AWS_URL_DELETE_CHILD,
                 {
                  headers:{
                   Authorization:(user)
@@ -132,7 +124,7 @@ function accordion(room_name){
                  }
                 }
                 ).then(function (response) {
-                  console.log(response.status);
+                  console.log(response.data.message);
                   if(response.status==200)// return setTimeout(() => {
                     return Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용
                       (item)+" is deleted",
@@ -143,7 +135,6 @@ function accordion(room_name){
                         }
                       ]
                     )
-                  // },200)
                 }).catch(function (error){
                   console.log(error.response.data.message,error.response.status);
                   })},
@@ -192,31 +183,14 @@ function accordion(room_name){
         }
       }
     ]
-    const [refreshing, setRefreshing] = useState(false);
+  const [refreshing, setRefreshing] = useState(false);
   const [child_name, setchild_name] = useState('');
   const [room, setroom] = useState('');
   const [grade, setgrade] = useState('');
-  const [send, setsend] = useState(false);
   const [child_name_list, setchild_name_list] = useState([]);
   const user = route.params.Token
-  const selectedItem = {
-    title: 'Selected item title',
-    description: 'Secondary long descriptive text ...',
-};
+  const AWS_URL_ADD_CHILD = 'http://' + AWS_PUBLIC_ADDR + ':8000/child/add-child/';
 
-// export 
-// const Dropdown = () => {
-//     return (
-//         <RNPickerSelect
-//             pickerProps={{
-//                 accessibilityLabel: selectedItem.title,
-//             }}
-//         >
-//             <Text>{selectedItem.title}</Text>
-//             <Text>{selectedItem.description}</Text>
-//         </RNPickerSelect>
-//     );
-// };
   const onRefresh = () => {
     //Clear old data of the list
     setchild_name_list([]);
@@ -227,12 +201,42 @@ function accordion(room_name){
         setchild_name_list(response.data.childs);
       }
     ).catch(console.log);
-    // getUsers().then(console.log).catch(console.log);
-    // Set_Child();
   };
-
+  async function PostUsers(room,child_name,grade){
+    const response = await axios.post(AWS_URL_ADD_CHILD,
+    {
+      child_name: (child_name),
+      room: (room),
+      grade: (grade),
+    },{
+      headers: {
+        Authorization:(user)
+      }
+    });
+    if(response.status == 200){
+      return Promise.resolve(console.log(child_name,room,grade),
+        Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용
+          (child_name)+" is added",
+          (room)+"room",
+          [
+            {
+              text:"Confirm",onPress:()=>{onRefresh()}
+            }
+          ]
+        )
+      );//
+    }
+    else{
+      return Promise.reject('File not found');
+    }
+  }
+  function ADD_CHILD(room,child_name,grade){
+    console.log(room,child_name,grade,'hihi');
+    PostUsers(room,child_name,grade).then((response)=>{}).catch(console.log)
+  }
   function SetAge_function(room,child_name,user){
-    console.log(room);
+    setchild_name(child_name);
+    console.log(room,child_name,grade);
     Alert.prompt(
       'How old are you?',
       'In Number',
@@ -245,76 +249,31 @@ function accordion(room_name){
         {
           text: "Confirm",
           style: "confirm",
-          onPress: (grade)=> {grade =>{setgrade(grade)},console.log(grade),axios.post('http://127.0.0.1:8000/child/add-child/',
-          {
-            child_name: (child_name),
-            room: (room),
-            grade: (grade),
-          },{
-            headers: {
-              Authorization:(user)
-            }
-          }).then(function (response) {
-          console.log(response.status);
-          if(response.status==200)// return setTimeout(() => {
-            return Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용
-              (child_name)+" is added",
-              (room)+"room",
-              [
-                {
-                  text:"Confirm",onPress:()=>{onRefresh(),console.log(response.data.message,response.status)}
-                }
-              ]
-            )
-          // },200)
-        }).catch(function (error){
-          console.log(error.response.data.message,error.response.status);
-          })}
+          onPress: (grade)=> {grade =>{setgrade(grade)},console.log(grade),ADD_CHILD(room,child_name,grade)}
         }
       ]
     )
   }
 
   const getUsers = async () => {
-    const response = await axios.get('http://127.0.0.1:8000/child/add-child/');
-    // console.log(response.status);
+    const response = await axios.get(AWS_URL_ADD_CHILD);
     if(response.status == 203){
       const jsonValue = await response;
-      // console.log(jsonValue);sds
-      // setchild_name_list(response.data.childs);
       return Promise.resolve(jsonValue);//
     }
     else{
       return Promise.reject('File not found');
     }
-    // console.log(response.data.childs);
-    // setchild_name_list(response.data.childs);
   };
-  // const Set_Child = () => {
-  //   const data = getUsers().then(console.log).catch(console.log);
-  //   setchild_name_list(data);
-  // }
+
     const renderItem = ({item}) => (
       
       <Item title={item.child_name} room_name={item.room} age={item.grade} style={styles.back} id={item.id}/>
     );
     useEffect(()=>{
       onRefresh();
-    // getUsers().then(
-    //   (response)=>{
-    //     console.log(response.data.childs);
-    //     setchild_name_list(response.data.childs);
-    //   }
-      // function(response){
-      //   console.log(response.data);
-      //   setchild_name_list(response.data.childs);
-      // }
-    // ).catch(console.log);
-    //  console.log(child_name_list)
-    
     },[])
 
-    LogBox.ignoreLogs(['warning: ...']);
     return (
       <SafeAreaView style={styles.top}>
         <View style={styles.array}>
@@ -341,22 +300,22 @@ function accordion(room_name){
           { 
             text:"Green",
             style:"confirm",
-            onPress: ()=>{SetAge_function('Green',child_name,user)}
+            onPress: ()=>{setroom('Green'),SetAge_function('Green',child_name,user)}
           },
           {
             text:"Blue",
             style:"confirm",
-            onPress: ()=>{SetAge_function('Blue',child_name,user)}
+            onPress: ()=>{setroom('Blue'),SetAge_function('Blue',child_name,user)}
           },
           {
             text:"Orange",
             style:"confirm",
-            onPress: ()=>{SetAge_function('Orange',child_name,user)}
+            onPress: ()=>{setroom('Orange'),SetAge_function('Orange',child_name,user)}
           },
           {
             text:"Red",
             style:"confirm",
-            onPress: ()=>{SetAge_function('Red',child_name,user)}
+            onPress: ()=>{setroom('Red'),SetAge_function('Red',child_name,user)}
           },
           {
             text: "Cancel",
@@ -379,31 +338,7 @@ function accordion(room_name){
                 {
                   text: "confirm",
                   style: "confirm",
-                  onPress: (grade)=> {grade =>{setgrade(grade)},console.log(grade),axios.post('http://127.0.0.1:8000/child/add-child/',
-                  {
-                    child_name: (child_name),
-                    room: (room),
-                    grade: (grade),
-                  },{
-                    headers: {
-                      Authorization:(user)
-                    }
-                  }).then(function (response) {
-                  console.log(response.status);
-                  if(response.status==200)// return setTimeout(() => {
-                    return Alert.alert(     // 받아온 response값이 200이면 Alert.alert적용
-                      (child_name)+" is added",
-                      (room)+"room",
-                      [
-                        {
-                          text:"Confirm",onPress:()=>{onRefresh(),console.log(response.data.message,response.status)}
-                        }
-                      ]
-                    )
-                  // },200)
-                }).catch(function (error){
-                  console.log(error.response.data.message,error.response.status);
-                  })}
+                  onPress: (grade)=> {grade =>{setgrade(grade)},console.log(grade),onRefresh()}
                 }
               ]
             )} 
@@ -418,26 +353,16 @@ function accordion(room_name){
             </TouchableOpacity>
             </View>
       <View style={styles.container}>
-      {/* <ScrollView> */}
-      
-        {/* <View style={styles.body}>         */}
         {refreshing ? <ActivityIndicator /> : null}
-        
         <FlatList
         data={child_name_list}
         renderItem={renderItem}
         keyExtractor={item => item.id}
         refreshControl={
           <RefreshControl
-              //refresh control used for the Pull to Refresh
               refreshing={refreshing}
               onRefresh={onRefresh}/>}
-              
               />
-        
-        {/* </View> */}
-        {/* </ScrollView> */}
-        
         </View>
         </SafeAreaView>
     );
